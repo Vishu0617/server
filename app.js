@@ -3,7 +3,7 @@ const author = require("./routes/auther");
 const clientAuther=require("./routes/clientAuther")
 const express = require("express");
 const cors =require("cors")
-const path=require("path")
+// const path=require("path")
 const app = express();
 
 
@@ -36,12 +36,12 @@ mongoose
   app.use(cors({origin:'http://localhost:3000',credentials:true}));
   app.use(express.urlencoded({extended:false}))
 
-//static files
-app.use(express.static(path.join(__dirname,'../front/build')))
+// //static files
+// app.use(express.static(path.join(__dirname,'../front/build')))
 
-app.get('*', function(req,res){
-  res.sendFile(path.join(__dirname,'../front/build/index.html'))
-})
+// app.get('*', function(req,res){
+//   res.sendFile(path.join(__dirname,'../front/build/index.html'))
+// })
 
 app.use("/", author); //admin routes
 app.use("/",clientAuther) //client routes

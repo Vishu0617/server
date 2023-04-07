@@ -308,6 +308,9 @@ router.post("/persnalfeedback/:id", async (req, res) => {
   // const utcTime = new Date('2023-03-10T12:00:00Z');
   // indiaTime = new Date(utcTime.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
   // console.log(indiaTime);
+  if(!feedback){
+    return res.status(400).json({ error: "Plze field the data.." });
+  }
   try {
     const data = new CLientFeedback({
       feedback,
