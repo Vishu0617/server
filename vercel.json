@@ -1,0 +1,17 @@
+{
+    "version0":19.0,
+    "build":[
+        {
+            "src":"./app.js",
+            "use":"@vercl/node"
+        }
+    ],
+    
+    "routes":[
+        {
+            "src":"/.*",
+            "dest":"app.js"
+        }
+    ]
+    
+}
