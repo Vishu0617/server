@@ -3,7 +3,7 @@ const author = require("./routes/auther");
 const clientAuther=require("./routes/clientAuther")
 const express = require("express");
 const cors =require("cors")
-// const path=require("path")
+const path = require('path');
 const app = express();
 
 
@@ -17,6 +17,12 @@ app.use(express.static("Upload/Admin"));
 app.use(express.static("Upload/User"));
 //databse connection
 
+app.use(express.static(path.join(__dirname, '../front/build')));
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, '../front/build/index.html'));
+});
+app.listen(9000);
 
 
 const DB = process.env.DATABASE;
