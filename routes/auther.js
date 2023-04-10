@@ -221,6 +221,11 @@ router.post("/sendLink", async (req, res) => {
 router.get("/findId/:id", async (req, res) => {
   const { id } = req.params;
   console.log(id);
+   
+  if(!id){
+   return res.status(401).json({ error: "Please Field The Input Detail Properly... " });
+  }
+
   try {
     //veryfy user
     const userValid = await User.findOne({ _id: id });
@@ -233,7 +238,9 @@ router.get("/findId/:id", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(401).json(error);
+    return res.status(500).json({ error: "server error" });
+    ;
+
   }
 });
 
@@ -243,13 +250,17 @@ router.put("/updatePwd/:id", async (req, res) => {
   const { pwd } = req.body;
   console.log(id, pwd);
 
+  if(!pwd){
+   return res.status(401).json({ error: "Please Field The Input Detail Properly... " });
+  }
+
   try {
     //veryfiy user
     const userValid = await User.findOne({ _id: id });
     // console.log(userValid);
 
     if (!userValid) {
-      return res.status(401).json({ message: "You Are Note A User..!!" });
+      return res.status(401).json({ error: "You Are Note A User..!!" });
     } else {
       //password update
       const pwdHash = await bcrypt.hash(pwd, 12);
@@ -265,7 +276,8 @@ router.put("/updatePwd/:id", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(401).json(error);
+       return res.status(500).json({ error: "server error" });
+
   }
 });
 
