@@ -39,7 +39,7 @@ router.post("/regi", adminUpload.single("file"), async (req, res) => {
   const file = req.file;
   // console.log(file.filename)
   if (!name || !email || !phone || !pwd || !cpwd || !file) {
-    return res.status(422).json({ error: "plz field the data properly..." });
+    return res.status(422).json({ error: "Please Field The Reagistration Detail Properly..." });
   }
 
   try {
@@ -47,7 +47,7 @@ router.post("/regi", adminUpload.single("file"), async (req, res) => {
     if (userExist) {
       return res
         .status(422)
-        .json({ error: "THis E-mail Alredy Used...Tray Another E-mail..." });
+        .json({ error: "This E-mail Alredy Used...Tray Another E-mail..." });
     } else if (pwd != cpwd) {
       return res
         .status(422)
@@ -84,9 +84,9 @@ router.post("/regi", adminUpload.single("file"), async (req, res) => {
         if (error) {
           console.log("Error", error);
         } else {
-          console.log("Your User Name and Password Send in Your Mail...!!!");
+          console.log("Your User Name and Password Send in Your E-mail...!!!");
           return res.status(201).json({
-            emailMessage: "Your User Name and Password Send in Your Mail...!!!",
+            emailMessage: "Your User Name and Password Send in Your E-mail...!!!",
           });
         }
       });
@@ -109,7 +109,7 @@ router.post("/login", async (req, res) => {
     const { email, pwd } = req.body;
 
     if (!email || !pwd) {
-      return res.status(400).json({ error: "Plze Filled The Login Data.." });
+      return res.status(400).json({ error: "Please Field The Login Detail Properly..." });
     }
 
     const userLogin = await User.findOne({ email: email });
@@ -131,13 +131,13 @@ router.post("/login", async (req, res) => {
       } else {
         const { pwd, cpwd, ...data } = userLogin._doc;
         return  res.status(200).json({
-          message: ` Welcome Mr/Ms ${userLogin.name} you have Successfuly login..`,
+          message: ` Welcome, Mr/Ms ${userLogin.name} You Have Successfuly Login..`,
           token,
           data,
         });
       }
     } else {
-      return res.status(400).json({ error: "Email Note match..." });
+      return res.status(400).json({ error: "Youre E-mail is Wrong..." });
     }
   } catch (error) {
     console.log(error);
@@ -162,7 +162,7 @@ router.post("/sendLink", async (req, res) => {
 
   const { email } = req.body;
   if (!email) {
-   return res.status(401).json({ error: "Plz Enter Your Email... " });
+   return res.status(401).json({ error: "Please Field The Input Detail Properly... " });
   }
 
   try {
@@ -202,11 +202,11 @@ router.post("/sendLink", async (req, res) => {
       transporter.sendMail(mailOptions, (err) => {
         if (err) {
           console.log(err);
-          return  res.status(401).json({ error: "email note send" });
+          return  res.status(401).json({ error: "Somthing Went Wrong" });
         } else {
-          console.log("Password reset link send successfuly to youre email...");
+          console.log("Password Re-set Link send Successfuly to Youre E-mail...");
           return res.status(201).json({
-            message: "Password reset link send successfuly to youre email... ",
+            message: "Password Re-set Link send Successfuly to Youre E-mail... ",
           });
         }
       });
@@ -229,7 +229,7 @@ router.get("/findId/:id", async (req, res) => {
     if (userValid) {
       return res.status(201).json({ userValid });
     } else {
-      return res.status(401).json({ message: "User note exist" });
+      return res.status(401).json({ message: "You Are Note A User..!!" });
     }
   } catch (error) {
     console.log(error);
@@ -249,7 +249,7 @@ router.put("/updatePwd/:id", async (req, res) => {
     // console.log(userValid);
 
     if (!userValid) {
-      return res.status(401).json({ message: "User note exist" });
+      return res.status(401).json({ message: "You Are Note A User..!!" });
     } else {
       //password update
       const pwdHash = await bcrypt.hash(pwd, 12);
@@ -261,7 +261,7 @@ router.put("/updatePwd/:id", async (req, res) => {
 
       return res
         .status(201)
-        .json({ message: "Password Update", data: newUser });
+        .json({ message: "Youre New Password Successfully Update", data: newUser });
     }
   } catch (error) {
     console.log(error);
@@ -278,7 +278,7 @@ router.put("/adminUpdate/:id", async (req, res) => {
     const data = await User.updateOne({ id:id},{name:name},{email:email},{phone:phone});
 
     return res.status(200).json({
-      message: "Data Update success",
+      message: "Youre Data Successfully Update",
       success: true,
       count: data.length,
       data: data.name,
@@ -291,9 +291,9 @@ router.put("/adminUpdate/:id", async (req, res) => {
 
 //logout
 router.get("/logout", (req, res) => {
-  console.log("Logout..");
+  console.log("you are logout successfully..Thank You");
   res.clearCookie("jwtoken", { path: "/" });
-  return res.status(200).json({ message: "youe are logout.." });
+  return res.status(200).json({ message: "you are logout successfully..Thank You" });
 });
 
 module.exports = router;

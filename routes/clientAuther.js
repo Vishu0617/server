@@ -52,7 +52,7 @@ router.post("/clientRegi", clientUpload.single("file"), async (req, res) => {
   // console.log(req.body);
   // console.log(req.file.originalname)
   if (!name || !email || !phone || !pwd || !cpwd || !file) {
-    return res.status(422).json({ error: "plz field the data properly..." });
+    return res.status(422).json({ error: "Please Field The Reagistration Detail" });
   }
 
   try {
@@ -60,7 +60,7 @@ router.post("/clientRegi", clientUpload.single("file"), async (req, res) => {
     if (clientExit) {
       return res
         .status(422)
-        .json({ error: "This email alredy used..tray another email...." });
+        .json({ error: "This E-mail Alredy Used..Tray Another E-mail...." });
     } else if (pwd != pwd) {
       return res
         .status(4200)
@@ -97,9 +97,9 @@ router.post("/clientRegi", clientUpload.single("file"), async (req, res) => {
         if (error) {
           console.log("Error", error);
         } else {
-          console.log("Your User Name and Password Send in Your Mail...!!!");
+          console.log("Your User Name and Password Send in Your E-mail...!!!");
           return res.status(201).json({
-            emailMessage: "Your User Name and Password Send in Your Mail...!!!",
+            emailMessage: "Your User Name and Password Send in Your E-mail...!!!",
           });
         }
       });
@@ -122,7 +122,7 @@ router.post("/clientLogin", async (req, res) => {
     const { email, pwd } = req.body;
     console.log(req.body);
     if (!email || !pwd) {
-      return res.status(400).json({ error: "Plze Filled The Login Data.." });
+      return res.status(400).json({ error: "Please Field The Login Detail" });
     }
 
     const clientFind = await Client.findOne({ email: email });
@@ -148,7 +148,7 @@ router.post("/clientLogin", async (req, res) => {
         });
       }
     } else {
-      return res.status(400).json({ error: "Email Note match..." });
+      return res.status(400).json({ error: "Youre E-mail is Wrong..." });
     }
   } catch (error) {
     console.log(error);
@@ -163,13 +163,13 @@ router.put("/clientPwdUpdate/:id", async (req, res) => {
   console.log(id, pwd);
 
   if (!pwd) {
-    return res.status(400).json({ error: "Plze Enter New Password.." });
+    return res.status(400).json({ error: "Please Genrate New Password.." });
   }
 
   try {
     const clietnValid = await Client.findById({ _id: id });
     if (!clietnValid) {
-      return res.status(401).json({ message: "User note exist" });
+      return res.status(401).json({ message: "You Are Note A User" });
     } else {
       const clienPwdHash = await bcrypt.hash(pwd, 12);
       const newClientPwd = await Client.findByIdAndUpdate(
@@ -179,7 +179,7 @@ router.put("/clientPwdUpdate/:id", async (req, res) => {
       console.log(newClientPwd);
       return res
         .status(201)
-        .json({ message: "Password Update go to the Website", data: newClientPwd });
+        .json({ message: "Youre Password Successfully Updated", data: newClientPwd });
     }
   } catch (error) {
     console.log(error);
@@ -206,9 +206,6 @@ router.get("/fetchData/:id", async (req, res) => {
 router.get("/fetachAll", async (req, res) => {
   try {
     const data = await Client.find();
-    if (data === "") {
-      res.status(400).json({ error: "Table is empty" });
-    }
     // console.log(data)
     return res.status(200).json({
       success: true,
@@ -266,7 +263,7 @@ router.put("/update/:id", async (req, res) => {
     );
 
     return res.status(200).json({
-      message: "Data Update success",
+      message: "Youre Data Update Successfully",
       success: true,
       count: data.length,
       data: data.name,
@@ -284,7 +281,7 @@ router.delete("/deleteClient/:id", async (req, res) => {
 
   try {
     const data = await Client.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "Delete data", data: data });
+    return res.status(200).json({ message: "This Data Delete Permanen", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -309,7 +306,7 @@ router.post("/persnalfeedback/:id", async (req, res) => {
   // indiaTime = new Date(utcTime.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
   // console.log(indiaTime);
   if(!feedback){
-    return res.status(400).json({ error: "Plze field the data.." });
+    return res.status(400).json({ error: "Please Field The Input Detail" });
   }
   try {
     const data = new CLientFeedback({
@@ -322,7 +319,7 @@ router.post("/persnalfeedback/:id", async (req, res) => {
     await data.save();
 
     return res.status(201).json({
-      message: `youre suggestion successfuly sent`,
+      message: `Thank You For Youre Feedback`,
     });
   } catch (error) {
     console.log(error);
@@ -351,12 +348,12 @@ router.post("/addVehicale/:id", async (req, res) => {
   const { name, phone, demail,vname, vnumber, capacity, slocation, dlocation } = req.body;
   // console.log(req.body,id)
   if (!name || !phone ||  !phone || !vname || !vnumber || !capacity || !slocation || !dlocation) {
-    return res.status(422).json({ error: "plz field the data properly..." });
+    return res.status(422).json({ error: "Please Field The Input Detail" });
   }
   try {
     const addVehicale = new Vehicale({name,phone,demail,vname,vnumber,capacity,slocation,dlocation,client: id});
     await addVehicale.save();
-    return res.status(201).json({message: `Thank you...`, data: addVehicale});
+    return res.status(201).json({message: `Youre Vehicale Added Success...`, data: addVehicale});
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -378,7 +375,7 @@ router.get("/fetchSingleVehicale/:id", async (req, res) => {
     } else {
       return res
         .status(500)
-        .json({ error: "you have note add youre vehicale" });
+        .json({ error: "You Have Note Add Youre Vehicale" });
     }
   } catch (error) {
     console.log(error);
@@ -409,7 +406,7 @@ router.delete("/vehicaleDelete/:id", async (req, res) => {
     const data = await Vehicale.findByIdAndDelete({ _id: id });
     return res
       .status(200)
-      .json({ message: "Delete vehicale detail", data: data });
+      .json({ message: "This Vehicale Delete Permanently", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -422,7 +419,7 @@ router.post("/addgoods/:id", async (req, res) => {
   const { spoint, dname, cphone, date, km, price, descr, status } = req.body;
 
   if(!spoint || !dname || !cphone || !date || !km || !price || !descr){
-    return res.status(422).json({ error: "plz field the data properly..." });
+    return res.status(422).json({ error: "Please Field The Input Detail..." });
   }
 
   try {
@@ -440,7 +437,7 @@ router.post("/addgoods/:id", async (req, res) => {
 
     await data.save();
     return res.status(201).json({
-      message: `Data Update`,
+      message: `Youre Data Update Success`,
     });
   } catch (error) {
     console.log(error);
@@ -493,7 +490,7 @@ router.delete("/goodsDelete/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const data = await Goods.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "Delete goods detail", data: data });
+    return res.status(200).json({ message: "This Transection Delete Permanently", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -525,7 +522,7 @@ router.put("/statusUpdate/:id", async (req, res) => {
     const data = await Goods.findByIdAndUpdate({ _id: id }, { status: status });
 
     return res.status(200).json({
-      message: "Data Update success",
+      message: "Youre Data Update success",
     });
   } catch (error) {
     console.log(error);
@@ -539,7 +536,7 @@ router.post("/clientMessage", async (req, res) => {
   console.log(req.body);
 
   if (!cname || !cemail || !cphone || !address || !msg) {
-    return res.status(422).json({ error: "plz field the data properly..." });
+    return res.status(422).json({ error: "Please Field The Input Data ..." });
   }
 
   try {
@@ -582,7 +579,7 @@ router.delete("/messageDelete/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const data = await contectMessage.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "Delete data", data: data });
+    return res.status(200).json({ message: "This Message Delete Permanently", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -596,7 +593,7 @@ router.post("/feedback/:id", async (req, res) => {
   console.log(req.params, req.body);
 
   if(!fbphone || !fbemail || !fbmessage){
-    return res.status(422).json({ error: "plz field the data properly..." });
+    return res.status(422).json({ error: "Please Field The Input Data..." });
   }
 
   try {
@@ -640,7 +637,7 @@ router.delete("/deleteFeedback/:id", async (req, res) => {
   console.log(id);
   try {
     const data = await FeedBack.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "Delete data", data: data });
+    return res.status(200).json({ message: "This Data Delete Permanently", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -654,7 +651,7 @@ router.post("/userSendLink", async (req, res) => {
 
   const { email } = req.body;
   if (!email) {
-    return res.status(401).json({ error: "Plz Enter Your Email... " });
+    return res.status(401).json({ error: "Please Field The Input Data" });
   }
 
   try {
@@ -722,7 +719,7 @@ router.get("/userFind/:id", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(401).json(error);
+    res.status(401).json({ error: "invalid user" });
   }
 });
 
@@ -740,7 +737,7 @@ router.post("/clientPayment/:id/:pri/:email/:tid", async (req, res) => {
   if (!cname || !cnumber || !exptime || !cvv) {
     return res
       .status(422)
-      .json({ error: "plz field the payment data properly..." });
+      .json({ error: "c" });
   }
   try {
     const clientFind = await Client.findOne({ email: email });
@@ -786,7 +783,7 @@ router.post("/clientPayment/:id/:pri/:email/:tid", async (req, res) => {
       transporter.sendMail(mailOptions, (error) => {
         if (error) {
           console.log(error);
-          res.status(400).json({ error: "Payment failed...Please Re-Login" });
+          res.status(400).json({ error: "Payment Failed...Please Re-Login" });
         } else {
           console.log("Cheack youre email...sent a otp");
           res.status(200).json({ message: "Cheack youre email...sent a otp " });
@@ -810,14 +807,14 @@ router.post("/clientOtpVerification/:id", async (req, res) => {
   console.log(otp, id);
 
   if (!otp) {
-    return res.status(400).json({ error: "Plze Filled The Login Data.." });
+      return res.status(400).json({ error: "Please Field The Input Data ..." });
   }
   try {
     const findOtp = await ClientPayment.findOne({ otp: otp });
     if (!findOtp) {
       return res.status(400).json({ error: "Enter OTP is wrong" });
     } else {
-      return res.status(200).json({ message: `youre payment suucess...`, data: findOtp });
+      return res.status(200).json({ message: `Youre Payment Suucess...`, data: findOtp });
     }
   } catch (error) {
     console.log(error);
@@ -867,7 +864,7 @@ router.delete("/paymentRemove/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const data = await ClientPayment.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "Remove Transection", data: data });
+    return res.status(200).json({ message: "Remove Transection Permanently", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -885,7 +882,7 @@ router.post("/vehicaleBook",async(req,res)=>{
   const ndate = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`;
 
   if(!address){
-    return res.status(422).json({ error: "plz field the data properly..." });
+    return res.status(422).json({ error: "Please Field The Input Data..." });
   }
   
   console.log("vehicale id"+vid,"user id"+id,address)
@@ -919,8 +916,8 @@ router.post("/vehicaleBook",async(req,res)=>{
         console.log(error);
         res.status(400).json({ error: "email note send" });
       } else {
-        console.log("Conform for booking");
-        res.status(200).json({ message: "Conform for booking" });
+        console.log("Now, You Have Conform Booking This Vehicale");
+        res.status(200).json({ message: "Now, You Have Conform Booking This Vehicale" });
       }
     });
 
