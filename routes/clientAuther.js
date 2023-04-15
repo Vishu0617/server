@@ -30,7 +30,6 @@ const nodemailer = require("nodemailer");
 //file upload
 const multer = require("multer");
 
-// const twilio=require("twilio");
 
 
 //register
@@ -95,7 +94,8 @@ router.post("/clientRegi", clientUpload.single("file"), async (req, res) => {
 
       transporter.sendMail(mailOptions, (error) => {
         if (error) {
-          console.log("Error", error);
+          console.log(error);
+          return res.status(400).json({ error: "Server Error...Please Chak Youre Internet " });
         } else {
           console.log("Your User Name and Password Send in Your E-mail...!!!");
           return res.status(201).json({
@@ -281,14 +281,12 @@ router.delete("/deleteClient/:id", async (req, res) => {
 
   try {
     const data = await Client.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "This Data Delete Permanen", data: data });
+    return res.status(200).json({ message: "This Data Delete Permanenent", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
   }
 });
-
-
 
 //update userpresnal feedback
 router.post("/persnalfeedback/:id", async (req, res) => {
@@ -735,9 +733,7 @@ router.post("/clientPayment/:id/:pri/:email/:tid", async (req, res) => {
   //  const time=`${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
   if (!cname || !cnumber || !exptime || !cvv) {
-    return res
-      .status(422)
-      .json({ error: "c" });
+    return res.status(422).json({ error: "Please Field The Payment Detail" });
   }
   try {
     const clientFind = await Client.findOne({ email: email });
@@ -783,10 +779,10 @@ router.post("/clientPayment/:id/:pri/:email/:tid", async (req, res) => {
       transporter.sendMail(mailOptions, (error) => {
         if (error) {
           console.log(error);
-          res.status(400).json({ error: "Payment Failed...Please Re-Login" });
+          return res.status(400).json({ error: "Server Error...Please Chak Youre Internet " });
         } else {
           console.log("Cheack youre email...sent a otp");
-          res.status(200).json({ message: "Cheack youre email...sent a otp " });
+          return res.status(200).json({ message: "Cheack youre email...sent a otp " });
         }
       });
     } else {
