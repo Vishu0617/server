@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "devstart": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev":"concurrently \"npm start\"\"npm run front"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
