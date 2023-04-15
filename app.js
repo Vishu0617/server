@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(express.static("Upload/Admin"));
 app.use(express.static("Upload/User"));
 //databse connection
+
 //static file read
 app.use(express.static(path.join(__dirname, '../front/build')));
 
@@ -41,13 +42,6 @@ mongoose
   app.use(express.json())
   app.use(cors({origin:'http://localhost:3000',credentials:true}));
   app.use(express.urlencoded({extended:false}))
-
-// //static files
-// app.use(express.static(path.join(__dirname,'../front/build')))
-
-// app.get('*', function(req,res){
-//   res.sendFile(path.join(__dirname,'../front/build/index.html'))
-// })
 
 app.use("/", author); //admin routes
 app.use("/",clientAuther) //client routes
