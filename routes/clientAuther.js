@@ -235,8 +235,9 @@ router.put(  "/fileUpload/:id",uclientUpload.single("file"),async (req, res) => 
     const file = req.file;
     // console.log(id,file)
     try {
-      const data = Client.findById({ id, file });
+      const data = Client.findOneAndReplace({_id:id},{file:file.filename});
 
+      console.log("Profile Update success",data)
       return res.status(200).json({
         message: "Profile Update success",
         success: true,
