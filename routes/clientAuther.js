@@ -88,7 +88,7 @@ router.post("/clientRegi", clientUpload.single("file"), async (req, res) => {
       const mailOptions = {
         from: process.env.EMAIL,
         to: email,
-        subject: "Registration For The Transport Triangle Client Side",
+        subject: "Registration For The Transport Triangle",
         html: `<h1>Hello ${name}</h1><hr/>You have successfully registered.!<br/>Your email is :-<b><u>${email}</u></b> <br/> password is :-<b><u>${pwd}</b></u> <br/> Keep save in secure  for the future used......<br/>Thank You For Registration<br><br/><hr/>`,
       };
 
