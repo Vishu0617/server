@@ -5,7 +5,7 @@ router.use(express.json());
 const bcrypt = require("bcryptjs");
 const path = require("path");
 //cookie-parser
-const cookieparser=require('cookie-parser')
+const cookieparser = require("cookie-parser");
 //user module
 const Client = require("../models/client");
 //client payment
@@ -16,7 +16,7 @@ const contectMessage = require("../models/ContectDetail");
 //vehicale
 const Vehicale = require("../models/vehicale");
 // booking vehical
-const BookingVehicale=require("../models/VehicaleBooking")
+const BookingVehicale = require("../models/VehicaleBooking");
 //goods
 const Goods = require("../models/goods");
 //feedback
@@ -29,8 +29,6 @@ const jwtoken = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 //file upload
 const multer = require("multer");
-
-
 
 //register
 const clientFile = multer.diskStorage({
@@ -51,7 +49,9 @@ router.post("/clientRegi", clientUpload.single("file"), async (req, res) => {
   // console.log(req.body);
   // console.log(req.file.originalname)
   if (!name || !email || !phone || !pwd || !cpwd || !file) {
-    return res.status(422).json({ error: "Please Field The Reagistration Detail" });
+    return res
+      .status(422)
+      .json({ error: "Please Field The Reagistration Detail" });
   }
 
   try {
@@ -95,11 +95,14 @@ router.post("/clientRegi", clientUpload.single("file"), async (req, res) => {
       transporter.sendMail(mailOptions, (error) => {
         if (error) {
           console.log(error);
-          return res.status(400).json({ error: "Server Error...Please Chak Youre Internet " });
+          return res
+            .status(400)
+            .json({ error: "Server Error...Please Chak Youre Internet " });
         } else {
           console.log("Your User Name and Password Send in Your E-mail...!!!");
           return res.status(201).json({
-            emailMessage: "Your User Name and Password Send in Your E-mail...!!!",
+            emailMessage:
+              "Your User Name and Password Send in Your E-mail...!!!",
           });
         }
       });
@@ -179,7 +182,10 @@ router.put("/clientPwdUpdate/:id", async (req, res) => {
       console.log(newClientPwd);
       return res
         .status(201)
-        .json({ message: "Youre Password Successfully Updated", data: newClientPwd });
+        .json({
+          message: "Youre Password Successfully Updated",
+          data: newClientPwd,
+        });
     }
   } catch (error) {
     console.log(error);
@@ -230,19 +236,26 @@ const uclientFile = multer.diskStorage({
 
 const uclientUpload = multer({ storage: uclientFile });
 //file upload
-router.put(  "/fileUpload/:id",uclientUpload.single("file"),async (req, res) => {
-    const { id } = req.params;
-    const file = req.file;
-    // console.log(id,file)
+router.put(
+  "/fileUpload/:id",
+  uclientUpload.single("file"),
+  async (req, res) => {
+    // const { id } = req.params;
+    // const file = req.file.filename;
+    // console.log(file)
     try {
-      const data = Client.findOneAndReplace({_id:id},{file:file.filename});
-
-      console.log("Profile Update success",data)
+      const data =await Client.findByIdAndUpdate(
+        { _id:req.params.id },
+        { 
+          $set:{file:req.file.filename},
+        },
+        {upsert:true},
+      )
+      console.log("Profile Update success");
       return res.status(200).json({
         message: "Profile Update success",
-        success: true,
         count: data.length,
-        data: data.name,
+        data: data.filename,
       });
     } catch (error) {
       console.log(error);
@@ -255,12 +268,13 @@ router.put(  "/fileUpload/:id",uclientUpload.single("file"),async (req, res) => 
 router.put("/update/:id", async (req, res) => {
   const { id } = req.params;
   const { name, email, phone } = req.body;
+  console.log(req.body);
 
   try {
-    const data = await Client.updateOne(
-      { name: name },
-      { email: email },
-      { phone: phone }
+    const data = await Client.findByIdAndUpdate(
+      { _id: id },
+      { name: name, email: email, phone: phone },
+      { new: true }
     );
 
     return res.status(200).json({
@@ -282,7 +296,9 @@ router.delete("/deleteClient/:id", async (req, res) => {
 
   try {
     const data = await Client.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "This Data Delete Permanenent", data: data });
+    return res
+      .status(200)
+      .json({ message: "This Data Delete Permanenent", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -304,7 +320,7 @@ router.post("/persnalfeedback/:id", async (req, res) => {
   // const utcTime = new Date('2023-03-10T12:00:00Z');
   // indiaTime = new Date(utcTime.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
   // console.log(indiaTime);
-  if(!feedback){
+  if (!feedback) {
     return res.status(400).json({ error: "Please Field The Input Detail" });
   }
   try {
@@ -344,15 +360,45 @@ router.get("/getPersnalFeedback/:id", async (req, res) => {
 //add vehicale
 router.post("/addVehicale/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, phone, demail,vname, vnumber, capacity, slocation, dlocation } = req.body;
+  const {
+    name,
+    phone,
+    demail,
+    vname,
+    vnumber,
+    capacity,
+    slocation,
+    dlocation,
+  } = req.body;
   // console.log(req.body,id)
-  if (!name || !phone ||  !phone || !vname || !vnumber || !capacity || !slocation || !dlocation) {
+  if (
+    !name ||
+    !phone ||
+    !phone ||
+    !vname ||
+    !vnumber ||
+    !capacity ||
+    !slocation ||
+    !dlocation
+  ) {
     return res.status(422).json({ error: "Please Field The Input Detail" });
   }
   try {
-    const addVehicale = new Vehicale({name,phone,demail,vname,vnumber,capacity,slocation,dlocation,client: id});
+    const addVehicale = new Vehicale({
+      name,
+      phone,
+      demail,
+      vname,
+      vnumber,
+      capacity,
+      slocation,
+      dlocation,
+      client: id,
+    });
     await addVehicale.save();
-    return res.status(201).json({message: `Youre Vehicale Added Success...`, data: addVehicale});
+    return res
+      .status(201)
+      .json({ message: `Youre Vehicale Added Success...`, data: addVehicale });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -417,7 +463,7 @@ router.post("/addgoods/:id", async (req, res) => {
   const { id } = req.params;
   const { spoint, dname, cphone, date, km, price, descr, status } = req.body;
 
-  if(!spoint || !dname || !cphone || !date || !km || !price || !descr){
+  if (!spoint || !dname || !cphone || !date || !km || !price || !descr) {
     return res.status(422).json({ error: "Please Field The Input Detail..." });
   }
 
@@ -489,7 +535,9 @@ router.delete("/goodsDelete/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const data = await Goods.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "This Transection Delete Permanently", data: data });
+    return res
+      .status(200)
+      .json({ message: "This Transection Delete Permanently", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -578,7 +626,9 @@ router.delete("/messageDelete/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const data = await contectMessage.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "This Message Delete Permanently", data: data });
+    return res
+      .status(200)
+      .json({ message: "This Message Delete Permanently", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -591,7 +641,7 @@ router.post("/feedback/:id", async (req, res) => {
   const { fbphone, fbemail, fbmessage } = req.body;
   console.log(req.params, req.body);
 
-  if(!fbphone || !fbemail || !fbmessage){
+  if (!fbphone || !fbemail || !fbmessage) {
     return res.status(422).json({ error: "Please Field The Input Data..." });
   }
 
@@ -636,7 +686,9 @@ router.delete("/deleteFeedback/:id", async (req, res) => {
   console.log(id);
   try {
     const data = await FeedBack.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "This Data Delete Permanently", data: data });
+    return res
+      .status(200)
+      .json({ message: "This Data Delete Permanently", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -730,7 +782,9 @@ router.post("/clientPayment/:id/:pri/:email/:tid", async (req, res) => {
   console.log(req.params, req.body);
 
   const current = new Date();
-  const ndate = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`;
+  const ndate = `${current.getDate()}-${
+    current.getMonth() + 1
+  }-${current.getFullYear()}`;
   //  const time=`${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
   if (!cname || !cnumber || !exptime || !cvv) {
@@ -780,16 +834,18 @@ router.post("/clientPayment/:id/:pri/:email/:tid", async (req, res) => {
       transporter.sendMail(mailOptions, (error) => {
         if (error) {
           console.log(error);
-          return res.status(400).json({ error: "Server Error...Please Chak Youre Internet " });
+          return res
+            .status(400)
+            .json({ error: "Server Error...Please Chak Youre Internet " });
         } else {
           console.log("Cheack youre email...sent a otp");
-          return res.status(200).json({ message: "Cheack youre email...sent a otp " });
+          return res
+            .status(200)
+            .json({ message: "Cheack youre email...sent a otp " });
         }
       });
     } else {
-      return res
-        .status(422)
-        .json({ error: "Plz Re-Login...!!" });
+      return res.status(422).json({ error: "Plz Re-Login...!!" });
     }
   } catch (error) {
     console.log(error);
@@ -804,14 +860,16 @@ router.post("/clientOtpVerification/:id", async (req, res) => {
   console.log(otp, id);
 
   if (!otp) {
-      return res.status(400).json({ error: "Please Field The Input Data ..." });
+    return res.status(400).json({ error: "Please Field The Input Data ..." });
   }
   try {
     const findOtp = await ClientPayment.findOne({ otp: otp });
     if (!findOtp) {
       return res.status(400).json({ error: "Enter OTP is wrong" });
     } else {
-      return res.status(200).json({ message: `Youre Payment Suucess...`, data: findOtp });
+      return res
+        .status(200)
+        .json({ message: `Youre Payment Suucess...`, data: findOtp });
     }
   } catch (error) {
     console.log(error);
@@ -861,7 +919,9 @@ router.delete("/paymentRemove/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const data = await ClientPayment.findByIdAndDelete({ _id: id });
-    return res.status(200).json({ message: "Remove Transection Permanently", data: data });
+    return res
+      .status(200)
+      .json({ message: "Remove Transection Permanently", data: data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
@@ -869,24 +929,30 @@ router.delete("/paymentRemove/:id", async (req, res) => {
 });
 
 //booking vehicale
-router.post("/vehicaleBook",async(req,res)=>{
-  const vid=req.body.vid;
-  const id=req.body.id;
-  const demail=req.body.demail
-  const address= req.body.address
+router.post("/vehicaleBook", async (req, res) => {
+  const vid = req.body.vid;
+  const id = req.body.id;
+  const demail = req.body.demail;
+  const address = req.body.address;
 
   const current = new Date();
-  const ndate = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`;
+  const ndate = `${current.getDate()}-${
+    current.getMonth() + 1
+  }-${current.getFullYear()}`;
 
-  if(!address){
+  if (!address) {
     return res.status(422).json({ error: "Please Field The Input Data..." });
   }
-  
-  console.log("vehicale id"+vid,"user id"+id,address)
-  try {
 
-    const data=new BookingVehicale({client:id,vehicaleId:vid,date:ndate,address})
-    
+  console.log("vehicale id" + vid, "user id" + id, address);
+  try {
+    const data = new BookingVehicale({
+      client: id,
+      vehicaleId: vid,
+      date: ndate,
+      address,
+    });
+
     await data.save();
     //send otp via email
     const transporter = nodemailer.createTransport({
@@ -914,15 +980,15 @@ router.post("/vehicaleBook",async(req,res)=>{
         res.status(400).json({ error: "email note send" });
       } else {
         console.log("Now, You Have Conform Booking This Vehicale");
-        res.status(200).json({ message: "Now, You Have Conform Booking This Vehicale" });
+        res
+          .status(200)
+          .json({ message: "Now, You Have Conform Booking This Vehicale" });
       }
     });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "server error" });
   }
-
-})
+});
 
 module.exports = router;
