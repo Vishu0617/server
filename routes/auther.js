@@ -301,6 +301,41 @@ router.put("/adminUpdate/:id", async (req, res) => {
   }
 });
 
+//admin change profile
+const ustoreFile = multer.diskStorage({
+  destination: (req, res, cb) => {
+    cb(null, "C:/Transport Triangle/server/Upload/Admin/");
+  },
+  filename: (req, res, cb) => {
+    const newfilename = Date.now() + path.extname(res.originalname);
+    cb(null, newfilename);
+  },
+});
+
+const uadminUpload = multer({ storage: ustoreFile });
+
+router.put("/changeProfile/:id",uadminUpload.single("file"), async (req,res)=>{
+  // const {id}=req.params;
+  try {
+    const data =await User.findByIdAndUpdate(
+      { _id:req.params.id },
+      { 
+        $set:{file:req.file.filename},
+      },
+      {upsert:true},
+    )
+    console.log("Profile Update success");
+    return res.status(200).json({
+      message: "Profile Update success",
+      count: data.length,
+      data: data.filename,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "server error" });
+  }
+})
+
 //logout
 router.get("/logout", (req, res) => {
   console.log("you are logout successfully..Thank You");
