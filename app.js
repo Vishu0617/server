@@ -13,14 +13,6 @@ app.use(express.static("Upload/Admin"));
 app.use(express.static("Upload/User"));
 //databse connection
 
-// static file read
-app.use(express.static(path.join(__dirname,'../front/build')))
-
-app.get('*',function(req,res){
-  res.send(path.join(__dirname,'../front/build/index.html'))
-})
-
-
 const DB = process.env.DATABASE;
 const PORT=process.env.PORT || 3001;
 
