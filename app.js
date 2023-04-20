@@ -14,12 +14,11 @@ app.use(express.static("Upload/User"));
 //databse connection
 
 //static file read
-// app.use(express.static(path.join(__dirname, '../front/build')));
+app.use(express.static(path.join(__dirname,'../front/build')))
 
-// app.get('*', function (req, res) {
-//   res.sendFile(path.join(__dirname, '../front/build/index.html'));
-// });
-// app.listen(9000);
+app.get('*',function(req,res){
+  res.send(path.join(__dirname,'../front/build/index.html'))
+})
 
 
 const DB = process.env.DATABASE;
