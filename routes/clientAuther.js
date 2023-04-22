@@ -236,10 +236,7 @@ const uclientFile = multer.diskStorage({
 
 const uclientUpload = multer({ storage: uclientFile });
 //file upload
-router.put(
-  "/fileUpload/:id",
-  uclientUpload.single("file"),
-  async (req, res) => {
+router.put("/fileUpload/:id",uclientUpload.single("file"),async (req, res) => {
     // const { id } = req.params;
     // const file = req.file.filename;
     // console.log(file)
