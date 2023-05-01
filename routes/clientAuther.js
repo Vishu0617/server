@@ -988,4 +988,10 @@ router.post("/vehicaleBook", async (req, res) => {
   }
 });
 
+router.get("/userLogout",(req,res)=>{
+  console.log("user...you are logout successfully....")
+  return res.status(200).json({ message: "you are logout successfully...." });
+
+})
+
 module.exports = router;
