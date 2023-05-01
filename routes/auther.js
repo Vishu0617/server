@@ -338,9 +338,9 @@ router.put("/changeProfile/:id",uadminUpload.single("file"), async (req,res)=>{
 
 //logout
 router.get("/logout", (req, res) => {
-  console.log("you are logout successfully..Thank You");
+  console.log("you are logout successfully....");
   res.clearCookie("jwtoken", { path: "/" });
-  return res.status(200).json({ message: "you are logout successfully..Thank You" });
+  return res.status(200).json({ message: "you are logout successfully...." });
 });
 
 module.exports = router;
